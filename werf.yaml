@@ -576,8 +576,14 @@ shell:
     echo '{{- env "CI_COMMIT_TAG" | default "dev" }}' > /deckhouse/version
 
 ---
-artifact: release-channel-version-artifact
+image: release-channel-version-artifact
 from: {{ .Images.BASE_ALPINE }}
+dependencies:
+  - image: dev
+    before: setup
+    imports:
+      - type: ImageDigest
+        targetEnv: deckhouseImageDigest
 shell:
   beforeInstall:
     - apk add --no-cache curl
@@ -586,7 +592,7 @@ shell:
   install:
     - |
       version="{{ env "CI_COMMIT_REF_NAME" }}"
-      yq w /deckhouse/release.yaml version $version | yq r - -j > version.json
+      yq w /deckhouse/release.yaml version $version digest $deckhouseImageDigest  | yq r - -j > version.json
       # changelog exists only for tags, we have to skip it for branches
       {{- $changelog := index (.Files.Glob "CHANGELOG/CHANGELOG-*") (printf "CHANGELOG/CHANGELOG-%s.yml" (env "CI_COMMIT_REF_NAME")) }}
       {{ if $changelog }}
@@ -603,7 +609,7 @@ git:
 image: release-channel-version
 from: {{ .Images.BASE_SCRATCH }}
 import:
-  - artifact: release-channel-version-artifact
+  - image: release-channel-version-artifact
     add: /
     to: /
     after: install
@@ -700,6 +706,8 @@ dependencies:
     imports:
     - type: ImageTag
       targetEnv: MODULES_IMAGES_TAGS_{{ $ModuleNameCamel }}_{{ $ImageNameCamel }}
+    - type: ImageDigest
+      targetEnv: MODULES_IMAGES_ID_{{ $ModuleNameCamel }}_{{ $ImageNameCamel }}
 {{- end }}
 import:
 - artifact: jq
@@ -708,12 +716,21 @@ import:
   before: setup
 shell:
   setup:
+  - echo "build images_tags.json"
   - |
-    env | grep MODULES_IMAGES_TAGS | jq -Rn '
+    env | grep MODULES_IMAGES_TAGS | cut -f 4- -d '_' > tags_wo_sha.lst
+    touch tags_full.lst
+    for line in `env | grep MODULES_IMAGES_ID_`
+    do
+      tagKey=`echo $line | cut -f 4- -d '_' | cut -f 1 -d '='`
+      imageId=`echo $line | cut -f 4- -d '_' | cut -f 2 -d '='`
+      echo $tagKey'='$imageId >> tags_full.lst
+    done
+    cat tags_full.lst | jq -Rn '
       reduce inputs as $i (
         {};
         . * (
-          $i | ltrimstr("MODULES_IMAGES_TAGS_") | sub("=";"_") |
+          $i | sub("=";"_") |
           split("_") as [$moduleName, $imageName, $tag] |
           {($moduleName): {($imageName): $tag}}
         )

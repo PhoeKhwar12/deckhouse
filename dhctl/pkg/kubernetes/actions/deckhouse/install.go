@@ -60,12 +60,11 @@ type Config struct {
 }
 
 func (c *Config) GetImage() string {
-	registryNameTemplate := "%s%s:%s"
 	tag := c.DevBranch
 	if c.ReleaseChannel != "" {
 		tag = strcase.ToKebab(c.ReleaseChannel)
 	}
-	return fmt.Sprintf(registryNameTemplate, c.Registry.Address, c.Registry.Path, tag)
+	return fmt.Sprintf("%s%s:%s", c.Registry.Address, c.Registry.Path, tag)
 }
 
 func (c *Config) IsRegistryAccessRequired() bool {
