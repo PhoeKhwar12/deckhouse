@@ -15,7 +15,10 @@
 {{- $kubernetesVersion := printf "%s%s" (.kubernetesVersion | toString) (index .k8s .kubernetesVersion "patch" | toString) | replace "." "" }}
 {{- $kubernetesCniVersion := index .k8s .kubernetesVersion "cniVersion" | toString | replace "." "" }}
 bb-rp-remove kubeadm
+
+set -x
 bb-rp-install "kubernetes-cni:{{ index .images.registrypackages (printf "kubernetesCniAltlinux%s" $kubernetesCniVersion) | toString }}" "kubectl:{{ index .images.registrypackages (printf "kubectlAltlinux%s" $kubernetesVersion) | toString }}"
+set +x
 
 old_kubelet_hash=""
 if [ -f "${BB_RP_INSTALLED_PACKAGES_STORE}/kubelet/tag" ]; then
