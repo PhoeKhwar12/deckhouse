@@ -13,9 +13,24 @@ import:
   add: /
   to: /
   includePaths:
-  - kubernetes-cni_amd64.deb
   - install
   - uninstall
+  - bandwidth
+  - bridge
+  - dhcp
+  - firewall
+  - host-device
+  - host-local
+  - ipvlan
+  - loopback
+  - macvlan
+  - portmap
+  - ptp
+  - sbr
+  - static
+  - tuning
+  - vlan
+  - vrf
   before: setup
 docker:
   LABEL:
