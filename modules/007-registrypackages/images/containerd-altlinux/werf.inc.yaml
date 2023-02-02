@@ -1,15 +1,15 @@
 {{- $containerd_versions := list }}
-{{- $altlinux_versions := dict "p10" }}
+
 {{- range $key, $value := .CandiVersionMap.k8s }}
   {{- range $key, $versions := $value.bashible.altlinux }}
     {{- if $versions.containerd.desiredVersion }}
-      {{- $containerd_versions = printf "%s-%s" $versions.containerd.desiredVersion (index $altlinux_versions $key) | toString | append $containerd_versions }}
+      {{- $containerd_versions = $versions.containerd.desiredVersion | toString | append $containerd_versions }}
     {{- end}}
   {{- end }}
 {{- end }}
 {{- range $value := $containerd_versions | uniq }}
   {{- $version := $value | toString }}
-  {{- $image_version := $version | replace "containerd=" "" | replace "." "-" | replace "~" "-" }}
+  {{- $image_version := $version | replace "containerd=" "" | replace "." "-" | replace "_" "-" }}
 ---
 image: {{ $.ModuleName }}/{{ $.ImageName }}-{{ $image_version }}
 from: {{ $.Images.BASE_SCRATCH }}
@@ -25,12 +25,7 @@ import:
 docker:
   LABEL:
     distro: altlinux
-  {{- $distroname := regexSplit "-" $image_version -1 | last }}
-  {{- range $key, $value := $altlinux_versions }}
-    {{- if eq $value $distroname }}
-    version: {{  $key }}
-    {{- end }}
-  {{- end }}
+    version: all
     containerd: {{ $image_version }}
 ---
 artifact: {{ $.ModuleName }}/{{ $.ImageName }}-artifact-{{ $image_version }}
