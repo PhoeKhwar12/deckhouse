@@ -14,5 +14,5 @@
 # limitations under the License.
 
 set -Eeo pipefail
-apt-get install ./containerd_amd64.rpm
+apt-get install -y ./containerd_amd64.rpm
 echo 'RPM::Hold { containerd; };' >> /etc/apt/apt.conf.d/90-containerd-hold.conf
