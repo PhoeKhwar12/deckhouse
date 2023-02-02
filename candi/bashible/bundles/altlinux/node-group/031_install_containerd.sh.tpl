@@ -55,17 +55,14 @@ if [[ "$should_install_containerd" == true ]]; then
 #TODO
 {{- range $key, $value := index .k8s .kubernetesVersion "bashible" "altlinux" }}
   {{- $altlinuxVersion := toString $key }}
-  # {{ $value.containerd.desiredVersion }}
-  # {{ $.images.registrypackages }}
   if bb-is-altlinux-version? {{ $altlinuxVersion }} ; then
     containerd_tag="{{- index $.images.registrypackages (printf "containerdAltlinux%s" ($value.containerd.desiredVersion | replace "containerd=" "" | replace "." "_" | replace "-" "_" | camelcase )) }}"
   fi
 {{- end }}
 
-
-
-
+  set -x
   bb-rp-install "containerd:${containerd_tag}"
+  set +x
 fi
 
 # install crictl
