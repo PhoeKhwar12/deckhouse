@@ -17,7 +17,9 @@
 bb-rp-remove kubeadm
 
 set -x
-bb-rp-install "kubernetes-cni:{{ index .images.registrypackages (printf "kubernetesCniAltlinux%s" $kubernetesCniVersion) | toString }}" "kubectl:{{ index .images.registrypackages (printf "kubectlAltlinux%s" $kubernetesVersion) | toString }}"
+bb-rp-install "kubectl:{{ index .images.registrypackages (printf "kubectlAltlinux%s" $kubernetesVersion) | toString }}"
+
+bb-rp-install "kubernetes-cni:{{ index .images.registrypackages (printf "kubernetesCniAltlinux%s" $kubernetesCniVersion) | toString }}"
 set +x
 
 old_kubelet_hash=""
