@@ -252,6 +252,9 @@ var DefaultImagesTags = map[string]interface{}{
 	"logShipper": map[string]interface{}{
 		"vector": "imageHash-logShipper-vector",
 	},
+	"loki": map[string]interface{}{
+		"loki": "imageHash-loki-loki",
+	},
 	"metallb": map[string]interface{}{
 		"controller": "imageHash-metallb-controller",
 		"speaker":    "imageHash-metallb-speaker",
