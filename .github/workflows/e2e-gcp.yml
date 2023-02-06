@@ -46,7 +46,7 @@ on:
         description: 'A comma-separated list of cri to test. Available: Docker and Containerd.'
         required: false
       ver:
-        description: 'A comma-separated list of versions to test. Available: from 1.21 to 1.25.'
+        description: 'A comma-separated list of versions to test. Available: from 1.22 to 1.26.'
         required: false
       initial_ref_slug:
         description: 'An image tag to install first and then switch to workflow context ref'
