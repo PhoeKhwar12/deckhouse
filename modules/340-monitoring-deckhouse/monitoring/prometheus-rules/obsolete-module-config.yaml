@@ -2,12 +2,18 @@
   rules:
   - alert: ModuleConfigHasObsoleteVersion
     expr: |
-      max(module_config_obsolete_version) > 0
-    for: 2h
+      max by (name, version, latest) (module_config_obsolete_version) > 0
+    for: 15m
     labels:
       severity_level: "5"
     annotations:
       plk_protocol_version: "1"
+      plk_markup_format: "markdown"
+      summary: ModuleConfig for module {{$labels.name}} has obsolete spec.version={{$labels.version}}
       description: |
-        ModuleConfig/{{$labels.name}} has obsolete spec.version {{$labels.version}}. Migrate spec.settings schema to the latest version {{$labels.latest}}.
-      summary: ModuleConfig has obsolete spec.version
+        ModuleConfig/{{$labels.name}} has obsolete spec.settings schema: spec.version={{$labels.version}}.
+
+        Cluster team should change ModuleConfig according to the latest module documentation to
+        migrate spec.settings schema to the latest version {{$labels.latest}}.
+
+        Note: Deckhouse can't migrate spec.settings because ModuleConfig resources are stored in external repository.
