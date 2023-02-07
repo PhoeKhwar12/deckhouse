@@ -475,6 +475,9 @@ nsxt:
   host: 1.2.3.4
   password: password
   user: user
+nodes:
+  externalVmNetworkName: aaa,bbb
+  internalVmNetworkName: ccc,ddd
 `))
 		})
 	})
@@ -520,6 +523,10 @@ nsxt:
   host: 1.2.3.4
   password: password
   user: user
+
+nodes:
+  externalVmNetworkName: aaa,bbb
+  internalVmNetworkName: ccc,ddd
 
 vcenter:
   main:
