@@ -452,12 +452,6 @@ vcenter:
     server: "myhost"
     datacenters:
       - "X1"
-    externalNetworkNames:
-      - aaa
-      - bbb
-    internalNetworkNames:
-      - ccc
-      - ddd
     vmFolderPath: dev/test
 
 labels:
@@ -532,12 +526,6 @@ vcenter:
   main:
     datacenters:
     - X1
-    externalNetworkNames:
-    - aaa
-    - bbb
-    internalNetworkNames:
-    - ccc
-    - ddd
     server: myhost
     vmFolderPath: dev/test
 `))
