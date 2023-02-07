@@ -941,16 +941,12 @@ func newCloudProviderAvailabilityChecker() func(tYpE string) {
 // getAvailableCloudProviderTypes returns all cloud providers
 // containing corresponding checksum template in cloud-providers directory.
 func getAvailableCloudProviderTypes() set.Set {
-	const modulesDirCE = "/deckhouse/modules"
-	const modulesDirEE = "/deckhouse/ee/modules"
-	const modulesDirFE = "/deckhouse/ee/fe/modules"
-
 	ptypes := set.New()
 	modulesDir, ok := os.LookupEnv("MODULES_DIR")
 	if !ok {
-		ptypes.AddSet(getAvailableCloudProviderTypesInDir(modulesDirCE))
-		ptypes.AddSet(getAvailableCloudProviderTypesInDir(modulesDirEE))
-		ptypes.AddSet(getAvailableCloudProviderTypesInDir(modulesDirFE))
+		for _, modulesInEditionDir := range []string{"/deckhouse/modules", "/deckhouse/ee/modules", "/deckhouse/ee/fe/modules"} {
+			ptypes.AddSet(getAvailableCloudProviderTypesInDir(modulesInEditionDir))
+		}
 	} else {
 		ptypes.AddSet(getAvailableCloudProviderTypesInDir(modulesDir))
 	}
