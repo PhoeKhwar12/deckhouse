@@ -213,7 +213,7 @@ k8s:
   '1.26':
     status: available
     patch: 1
-    cniVersion: 1.1.2
+    cniVersion: 1.2.0
     bashible: *bashible_k8s_ge_1_22
     ccm:
       openstack: v1.26.0
