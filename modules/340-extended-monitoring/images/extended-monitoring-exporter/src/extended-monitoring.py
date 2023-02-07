@@ -34,7 +34,7 @@ kubernetes.config.load_incluster_config()
 logging.basicConfig(format='[%(asctime)s] - %(message)s', level=logging.INFO)
 
 EXTENDED_MONITORING_ANNOTATION_THRESHOLD_PREFIX = "threshold.extended-monitoring.flant.com/"
-EXTENDED_MONITORING_ENABLED_ANNOTATION = "extended-monitoring.flant.com/enabled"
+EXTENDED_MONITORING_ENABLED_LABEL = "extended-monitoring.flant.com/enabled"
 
 DEFAULT_SERVER_ADDRESS = '0.0.0.0'
 DEFAULT_PORT = 8080
@@ -54,15 +54,15 @@ class Annotated(ABC):
       "resource_version": 0,
     }
 
-    def __init__(self, namespace, name, kube_annotations):
+    def __init__(self, namespace, name, kube_labels):
         self.namespace = namespace
         self.name = name
         self.enabled = True
 
-        if kube_annotations:
-            if not {EXTENDED_MONITORING_ENABLED_ANNOTATION: "false"}.items() <= kube_annotations.items():
+        if kube_labels:
+            if not {EXTENDED_MONITORING_ENABLED_LABEL: "false"}.items() <= kube_labels.items():
                 self.thresholds = copy.deepcopy(self.default_thresholds)
-                for name, value in kube_annotations.items():
+                for name, value in kube_labels.items():
                     if name.startswith(EXTENDED_MONITORING_ANNOTATION_THRESHOLD_PREFIX):
                         self.thresholds.update(
                             {name.replace(EXTENDED_MONITORING_ANNOTATION_THRESHOLD_PREFIX, ""): value})
@@ -246,7 +246,7 @@ def _get_metrics():
     ns_list = (
         ns.metadata.name for ns in corev1.list_namespace().items
         if ns.metadata.annotations
-        and EXTENDED_MONITORING_ENABLED_ANNOTATION in ns.metadata.annotations.keys()
+        and EXTENDED_MONITORING_ENABLED_LABEL in ns.metadata.annotations.keys()
     )
 
     response = """# HELP extended_monitoring_annotations Extended monitoring annotations
