@@ -17,6 +17,8 @@
   {{- $experimentalOption = "--experimental-patches /var/lib/bashible/kubeadm/patches" -}}
 {{- end }}
 
+set -x
+
 mkdir -p /etc/kubernetes/deckhouse/kubeadm/patches/
 cp /var/lib/bashible/kubeadm/patches/* /etc/kubernetes/deckhouse/kubeadm/patches/
 kubeadm init phase certs all --config /var/lib/bashible/kubeadm/config.yaml
@@ -48,3 +50,5 @@ if [ ! -f /root/.kube/config ]; then
   mkdir -p /root/.kube
   ln -s /etc/kubernetes/admin.conf /root/.kube/config
 fi
+
+set +x
