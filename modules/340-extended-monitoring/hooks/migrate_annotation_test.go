@@ -24,6 +24,13 @@ import (
 )
 
 const annotatedObjects = `---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    extended-monitoring.flant.com/enabled: ""
+  name: test
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -72,7 +79,7 @@ metadata:
   name: test
 `
 
-var _ = Describe("Modules :: extended-monitoring :: hooks :: migrate_annotations ::", func() {
+var _ = FDescribe("Modules :: extended-monitoring :: hooks :: migrate_annotations ::", func() {
 
 	f := HookExecutionConfigInit(`{}`, `{}`)
 
@@ -85,7 +92,11 @@ var _ = Describe("Modules :: extended-monitoring :: hooks :: migrate_annotations
 
 		It("All extended-monitoring annotations should be replaced with labels", func() {
 			Expect(f).To(ExecuteSuccessfully())
-			Expect(f.PatchCollector.Operations()).To(HaveLen(6))
+			Expect(f.PatchCollector.Operations()).To(HaveLen(7))
+
+			namespace := f.KubernetesResource("Namespace", "", "test")
+			Expect(namespace.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+			Expect(namespace.Field("metadata.labels.extended-monitoring\\.flant\\.com/enabled").Exists()).To(BeTrue())
 
 			deployment := f.KubernetesResource("Deployment", "default", "test")
 			Expect(deployment.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
@@ -129,6 +140,10 @@ metadata:
 		It("Object annotations should not change", func() {
 			Expect(f).To(ExecuteSuccessfully())
 			Expect(f.PatchCollector.Operations()).To(HaveLen(0))
+
+			namespace := f.KubernetesResource("Namespace", "", "test")
+			Expect(namespace.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+			Expect(namespace.Field("metadata.labels.extended-monitoring\\.flant\\.com/enabled").Exists()).To(BeFalse())
 
 			deployment := f.KubernetesResource("Deployment", "default", "test")
 			Expect(deployment.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())

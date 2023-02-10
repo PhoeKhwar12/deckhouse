@@ -27,6 +27,7 @@ webhooks:
     apiGroups: ["*"]
     apiVersions: ["*"]
     resources:
+    - namespaces
     - deployments
     - statefulsets
     - daemonsets

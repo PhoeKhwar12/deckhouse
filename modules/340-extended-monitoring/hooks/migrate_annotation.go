@@ -31,6 +31,14 @@ var _ = sdk.RegisterFunc(&go_hook.HookConfig{
 	OnBeforeHelm: &go_hook.OrderedConfig{Order: 10},
 	Kubernetes: []go_hook.KubernetesConfig{
 		{
+			Name:                         "namespaces",
+			ApiVersion:                   "v1",
+			Kind:                         "Namespace",
+			ExecuteHookOnSynchronization: pointer.Bool(false),
+			ExecuteHookOnEvents:          pointer.Bool(false),
+			FilterFunc:                   applyNameNamespaceFilter,
+		},
+		{
 			Name:                         "deployments",
 			ApiVersion:                   "apps/v1",
 			Kind:                         "Deployment",
@@ -120,6 +128,17 @@ func applyMigratedFilter(obj *unstructured.Unstructured) (go_hook.FilterResult, 
 func handleLegacyAnnotatedIngress(input *go_hook.HookInput) error {
 	if len(input.Snapshots["migrated"]) > 0 {
 		return nil
+	}
+
+	for _, obj := range input.Snapshots["namespaces"] {
+		if obj == nil {
+			continue
+		}
+
+		objMeta := obj.(*ObjectNameNamespace)
+
+		input.PatchCollector.Filter(filterLabelsAndAnnotations, "v1", "Namespace",
+			objMeta.Namespace, objMeta.Name, object_patch.IgnoreMissingObject())
 	}
 
 	for _, obj := range input.Snapshots["deployments"] {
