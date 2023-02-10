@@ -186,7 +186,6 @@ var DefaultImagesTags = map[string]interface{}{
 		"descheduler": "imageHash-descheduler-descheduler",
 	},
 	"extendedMonitoring": map[string]interface{}{
-		"annotationsConverter":       "imageHash-extendedMonitoring-annotationConverter",
 		"certExporter":               "imageHash-extendedMonitoring-certExporter",
 		"eventsExporter":             "imageHash-extendedMonitoring-eventsExporter",
 		"extendedMonitoringExporter": "imageHash-extendedMonitoring-extendedMonitoringExporter",
