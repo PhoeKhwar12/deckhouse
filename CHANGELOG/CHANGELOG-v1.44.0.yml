@@ -1,0 +1,96 @@
+candi:
+  features:
+    - summary: flow-schema new module
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3674
+      impact: Added flow schema to prevent api overloading.
+  fixes:
+    - summary: Reorder swap disabling steps
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3772
+    - summary: fix modules_images_tags hook
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3747
+    - summary: fix flowschema apiversion for k8s < 1.23
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3738
+    - summary: fix registry packages tmpdir cleanup
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3709
+    - summary: refactor start_kubelet step
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3647
+ci:
+  features:
+    - summary: Add 1.26 kubernetes e2e tests
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3774
+  fixes:
+    - summary: Add not commit files
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3800
+    - summary: Fix save test results step
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3773
+cloud-provider-vsphere:
+  fixes:
+    - summary: Stop depending on CCM to uniquely identify instance ID. Fixes a couple of bugs.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3721
+      impact: <what to expect for users, possibly MULTI-LINE>, required if impact_level is high ↓
+deckhouse:
+  features:
+    - summary: Added bash wrapper for handling USR signals.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3660
+    - summary: Added Python environment to support Python hooks
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3523
+deckhouse-config:
+  features:
+    - summary: Support statuses for external modules
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3531
+      impact: <what to expect for users, possibly MULTI-LINE>, required if impact_level is high ↓
+extended-monitoring:
+  fixes:
+    - summary: Fixed keychain access panic in image-availability-exporter
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3685
+go_lib:
+  fixes:
+    - summary: Remove go_lib/hooks/delete_not_matching_certificate_secret/hook.go
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3777
+istio:
+  features:
+    - summary: Add istio version 1.16.2.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3595
+      impact: >-
+        In environments where legacy versions of istio are used, the
+        "D8IstioDeprecatedIstioVersionInstalled" alert will be fired.
+log-shipper:
+  fixes:
+    - summary: Bump librdkafka to v2.0.2 to make log-shipper read the full CA certificates chain for Kafka.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3693
+    - summary: Make log-shipper-agents sending whole JSON message with metadata to Kafka destination.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3692
+monitoring-kubernetes-control-plane:
+  fixes:
+    - summary: >-
+        Replaced `$__interval` with `$__range` variable so that the table properly displays results
+        over the whole time period
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3687
+node-local-dns:
+  fixes:
+    - summary: Add label for `node-local-dns` daemonset to fix cilium connectivity tests.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3620
+node-manager:
+  features:
+    - summary: Added lots of debugging messages to vSphere driver
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3720
+  fixes:
+    - summary: >-
+        1. Stop deleting Yandex.Cloud preemptible instances if percent of Ready Machines in a
+        NodeGroup dips below 90%.
+
+        2. Algorithm is simplified.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3589
+python_lib:
+  fixes:
+    - summary: Fixed the discovery of external module hooks
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3826
+runtime-audit-engine:
+  features:
+    - summary: A new module to collect security events about possible threats in the cluster.
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3477
+virtualization:
+  fixes:
+    - summary: fix `go list` for vmi-router
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3828
+
