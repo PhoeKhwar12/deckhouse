@@ -1,0 +1,5 @@
+virtualization:
+  fixes:
+    - summary: Some fixes regarding queue and panic when creating empty disks
+      pull_request: https://github.com/deckhouse/deckhouse/pull/3822
+

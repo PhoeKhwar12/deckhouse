@@ -1,5 +1,10 @@
 # Changelog v1.43
 
+## [MALFORMED]
+
+
+ - #3811 missing section, missing summary, missing type, unknown section ""
+
 ## Know before update
 
 
@@ -126,6 +131,7 @@
  - **[registrypackages]** Allow downgrading RPMs from registrypackages in any RPM-distro. [#3358](https://github.com/deckhouse/deckhouse/pull/3358)
  - **[upmeter]** Fixed rendering error when nodes are named as numbers. [#3795](https://github.com/deckhouse/deckhouse/pull/3795)
  - **[user-authz]** Enabled TLS certificate rotation for the authn webhook. [#3319](https://github.com/deckhouse/deckhouse/pull/3319)
+ - **[virtualization]** Some fixes regarding queue and panic when creating empty disks [#3822](https://github.com/deckhouse/deckhouse/pull/3822)
  - **[virtualization]** Introduce stateless `vmi-router`. [#3801](https://github.com/deckhouse/deckhouse/pull/3801)
  - **[virtualization]** Bump versions, enable HA and configure placement. [#3650](https://github.com/deckhouse/deckhouse/pull/3650)
 
