@@ -39,7 +39,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: test2
-  annotations:
+  labels:
     extended-monitoring.flant.com/enabled: "true"
 `)
 			f.BindingContexts.Set(f.GenerateBeforeHelmContext())
@@ -48,9 +48,9 @@ metadata:
 
 		It("Expected patch", func() {
 			ns := f.KubernetesResource("Namespace", "", "test1")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
 			ns = f.KubernetesResource("Namespace", "", "test2")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 		})
 
 		Context("Adding new config", func() {
@@ -58,7 +58,7 @@ metadata:
 				f.ValuesSetFromYaml("namespaceConfigurator", []byte(`
 ---
 configurations:
-  - annotations:
+  - labels:
       extended-monitoring.flant.com/enabled: "true"
     includeNames: ["test1"]
 `))
@@ -67,9 +67,9 @@ configurations:
 			})
 			It("Expected patch", func() {
 				ns := f.KubernetesResource("Namespace", "", "test1")
-				Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+				Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 				ns = f.KubernetesResource("Namespace", "", "test2")
-				Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+				Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 			})
 
 		})
@@ -191,7 +191,7 @@ metadata:
 			f.ValuesSetFromYaml("namespaceConfigurator", []byte(`
 ---
 configurations:
-  - annotations:
+  - labels:
       extended-monitoring.flant.com/enabled: "true"
     includeNames: ["prod-.*","infra-.*"]
     excludeNames: ["infra-test"]
@@ -222,7 +222,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: infra-test2
-  annotations:
+  labels:
     extended-monitoring.flant.com/enabled: "true"
 ---
 apiVersion: v1
@@ -236,7 +236,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: prod-ns2
-  annotations:
+  labels:
     extended-monitoring.flant.com/enabled: "true"
 `))
 			f.RunHook()
@@ -244,20 +244,20 @@ metadata:
 
 		It("Expected patch", func() {
 			ns := f.KubernetesResource("Namespace", "", "prod-ns1")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 			ns = f.KubernetesResource("Namespace", "", "infra-ns1")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 
 			ns = f.KubernetesResource("Namespace", "", "foo")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
 			ns = f.KubernetesResource("Namespace", "", "infra-test")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
 			ns = f.KubernetesResource("Namespace", "", "infra-test2")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 			ns = f.KubernetesResource("Namespace", "", "prod-ns2")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeTrue())
 			ns = f.KubernetesResource("Namespace", "", "infra-test3")
-			Expect(ns.Field(`metadata.annotations.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
+			Expect(ns.Field(`metadata.labels.extended-monitoring\.flant\.com/enabled`).Exists()).To(BeFalse())
 		})
 	})
 })

@@ -4,15 +4,14 @@ title: "The namespace-configurator module: examples"
 
 ## Example
 
-This example will add `extended-monitoring.flant.com/enabled=true` annotation and `foo=bar` label to every namespace starting with `prod-` and `infra-`, except `infra-test`.
+This example will add `extended-monitoring.flant.com/enabled=true` label and `foo=bar` label to every namespace starting with `prod-` and `infra-`, except `infra-test`.
 
 ```yaml
 namespaceConfiguratorEnabled: "true"
 namespaceConfigurator: |
   configurations:
-  - annotations:
+  - labels:
       extended-monitoring.flant.com/enabled: "true"
-    labels:
       foo: bar
     includeNames:
     - "prod-.*"
