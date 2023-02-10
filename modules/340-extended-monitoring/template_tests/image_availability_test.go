@@ -38,7 +38,14 @@ func checkImageAvailabilityObjects(hec *Config, exist bool) {
 }
 
 var _ = Describe("Module :: extendedMonitoring :: helm template :: image availability ", func() {
-	hec := SetupHelmConfig("")
+	hec := SetupHelmConfig(`---
+extendedMonitoring:
+  internal:
+    webhookCert:
+      crt: test
+      key: test
+      ca: test
+`)
 	BeforeEach(func() {
 		hec.ValuesSet("global.discovery.kubernetesVersion", "1.15.6")
 		hec.ValuesSet("global.modules.publicDomainTemplate", "%s.example.com")
