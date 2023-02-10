@@ -54,15 +54,15 @@ class Annotated(ABC):
       "resource_version": 0,
     }
 
-    def __init__(self, namespace, name, kube_labels):
+    def __init__(self, namespace, name, kube_labels, kube_annotations):
         self.namespace = namespace
         self.name = name
         self.enabled = True
 
-        if kube_labels:
-            if not {EXTENDED_MONITORING_ENABLED_LABEL: "false"}.items() <= kube_labels.items():
+        if kube_annotations:
+            if kube_labels and not {EXTENDED_MONITORING_ENABLED_LABEL: "false"}.items() <= kube_labels.items():
                 self.thresholds = copy.deepcopy(self.default_thresholds)
-                for name, value in kube_labels.items():
+                for name, value in kube_annotations.items():
                     if name.startswith(EXTENDED_MONITORING_ANNOTATION_THRESHOLD_PREFIX):
                         self.thresholds.update(
                             {name.replace(EXTENDED_MONITORING_ANNOTATION_THRESHOLD_PREFIX, ""): value})
@@ -74,7 +74,7 @@ class Annotated(ABC):
     @classmethod
     def list_threshold_annotated_objects(cls, namespace):
         for kube_object in cls.list(namespace, **cls.default_list_options):
-            yield cls(namespace, kube_object.metadata.name, kube_object.metadata.annotations)
+            yield cls(namespace, kube_object.metadata.name, kube_object.metadata.labels, kube_object.metadata.annotations)
 
     @property
     def formatted(self):
@@ -245,8 +245,8 @@ def _get_metrics():
     # iterate over namespaced objects in explicitly enabled via annotation Namespaces
     ns_list = (
         ns.metadata.name for ns in corev1.list_namespace().items
-        if ns.metadata.annotations
-        and EXTENDED_MONITORING_ENABLED_LABEL in ns.metadata.annotations.keys()
+        if ns.metadata.labels
+        and EXTENDED_MONITORING_ENABLED_LABEL in ns.metadata.labels.keys()
     )
 
     response = """# HELP extended_monitoring_annotations Extended monitoring annotations
